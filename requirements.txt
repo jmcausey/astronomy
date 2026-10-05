@@ -1,0 +1,7 @@
+Flask
+gunicorn
+psycopg[binary]
+requests
+matplotlib
+numpy
+pandas
