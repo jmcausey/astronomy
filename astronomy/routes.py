@@ -138,6 +138,12 @@ def location_search():
     return jsonify({"locations": [item for _, _, item in matches[:12]]})
 
 
+@bp.route("/apod")
+def apod_page():
+    data = fetch_apod_data()
+    return render_template("apod.html", apod=format_apod(data) if data else None)
+
+
 @bp.route("/api/apod")
 def apod():
     data = fetch_apod_data()
