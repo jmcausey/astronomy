@@ -2,9 +2,6 @@ import json,os
 from datetime import datetime
 from pathlib import Path
 from typing import Any,Optional
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 import requests
 from flask import current_app
@@ -73,6 +70,9 @@ def time_to_rad(value):
     except (ValueError,IndexError):return 0.0
 
 def generate_celestial_dial(output_dir=None):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
     data=fetch_latest_astronomy_data()
     fig,ax=plt.subplots(figsize=(9,9),subplot_kw={"projection":"polar"});ax.set_theta_zero_location("N");ax.set_theta_direction(-1)
     ri,ro=.72,1
@@ -95,6 +95,9 @@ def moon_phase_polygon(illumination,phase_name):
     return np.column_stack([x,np.concatenate([y,y[::-1]])])
 
 def generate_current_moon_phase(output_file=None):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
     row=get_db().execute("SELECT timestamp,moon_illumination_percentage,moon_phase FROM astronomy ORDER BY id DESC LIMIT 1").fetchone()
     if not row:raise ValueError("No records found in astronomy table.")
     from matplotlib.patches import Circle,Polygon
