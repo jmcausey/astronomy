@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Astronomy Picture of the Day{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <h1>Astronomy Picture of the Day</h1>
+</div>
+
+{% if apod %}
+  <article class="card apod-card">
+    <h2>{{ apod.title }}</h2>
+
+    {% if apod.media_type == "image" and apod.url %}
+      <a href="{{ apod.url }}" target="_blank" rel="noopener">
+        <img class="apod-image" src="{{ apod.url }}" alt="{{ apod.title }}">
+      </a>
+    {% elif apod.url %}
+      <p><a href="{{ apod.url }}" target="_blank" rel="noopener">View APOD media</a></p>
+    {% endif %}
+
+    {% if apod.description %}
+      <div class="apod-description">{{ apod.description|safe }}</div>
+    {% endif %}
+
+    {% if apod.credit %}
+      <div class="meta apod-credit">Credit: {{ apod.credit|safe }}</div>
+    {% endif %}
+  </article>
+{% else %}
+  <p class="empty-state">Astronomy Picture of the Day is currently unavailable.</p>
+{% endif %}
+{% endblock %}
