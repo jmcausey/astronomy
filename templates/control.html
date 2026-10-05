@@ -126,8 +126,10 @@
 
     function choose(item) {
       input.value = item.name;
-      lat.value = item.latitude;
-      lon.value = item.longitude;
+      lat.value = String(item.latitude);
+      lon.value = String(item.longitude);
+      lat.dispatchEvent(new Event("change", {bubbles: true}));
+      lon.dispatchEvent(new Event("change", {bubbles: true}));
       box.innerHTML = "";
       box.hidden = true;
     }
@@ -162,7 +164,7 @@
 
       timer = setTimeout(async () => {
         try {
-          const response = await fetch("/api/location-search?q=" + encodeURIComponent(query));
+          const response = await fetch("{{ url_for('astronomy.location_search') }}?q=" + encodeURIComponent(query));
           const data = await response.json();
           show(data.locations || []);
         } catch (error) {
