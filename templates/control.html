@@ -17,18 +17,29 @@
         Job name
         <input name="name" placeholder="Dallas daily" required>
       </label>
-      <label>
+
+      <label class="location-autocomplete">
         Location
-        <input name="location" list="locations" placeholder="Dallas, TX" required>
+        <input
+          name="location"
+          id="astronomy-location"
+          autocomplete="off"
+          placeholder="Start typing a city..."
+          required
+        >
+        <div id="location-suggestions" class="location-suggestions" role="listbox" hidden></div>
       </label>
+
       <label>
         Latitude
-        <input name="latitude" type="number" step="any" min="-90" max="90" required>
+        <input name="latitude" id="astronomy-latitude" type="number" step="any" min="-90" max="90" required>
       </label>
+
       <label>
         Longitude
-        <input name="longitude" type="number" step="any" min="-180" max="180" required>
+        <input name="longitude" id="astronomy-longitude" type="number" step="any" min="-180" max="180" required>
       </label>
+
       <label>
         Interval
         <select name="interval_minutes">
@@ -38,20 +49,17 @@
           <option value="1440">Daily</option>
         </select>
       </label>
+
       <label>
         <span>Enabled</span>
         <span><input type="checkbox" name="enabled" value="1" checked> Run automatically</span>
       </label>
+
       <div class="full">
         <button type="submit">Save Job</button>
       </div>
     </div>
   </form>
-  <datalist id="locations">
-    {% for location in locations %}
-      <option value="{{ location.name }}" data-latitude="{{ location.latitude }}" data-longitude="{{ location.longitude }}">
-    {% endfor %}
-  </datalist>
 </div>
 
 <div class="card">
@@ -107,4 +115,73 @@
     <p class="empty-state">No astronomy jobs configured.</p>
   {% endif %}
 </div>
+
+<script>
+  (() => {
+    const input = document.getElementById("astronomy-location");
+    const lat = document.getElementById("astronomy-latitude");
+    const lon = document.getElementById("astronomy-longitude");
+    const box = document.getElementById("location-suggestions");
+    let timer = null;
+
+    function choose(item) {
+      input.value = item.name;
+      lat.value = item.latitude;
+      lon.value = item.longitude;
+      box.innerHTML = "";
+      box.hidden = true;
+    }
+
+    function show(items) {
+      box.innerHTML = "";
+
+      items.forEach((item) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "location-option";
+        button.innerHTML =
+          "<strong>" + item.name.replace(/</g, "&lt;") + "</strong><small>" +
+          Number(item.latitude).toFixed(4) + ", " +
+          Number(item.longitude).toFixed(4) +
+          "</small>";
+        button.addEventListener("click", () => choose(item));
+        box.appendChild(button);
+      });
+
+      box.hidden = !items.length;
+    }
+
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      const query = input.value.trim();
+
+      if (query.length < 2) {
+        box.hidden = true;
+        return;
+      }
+
+      timer = setTimeout(async () => {
+        try {
+          const response = await fetch("/api/location-search?q=" + encodeURIComponent(query));
+          const data = await response.json();
+          show(data.locations || []);
+        } catch (error) {
+          box.hidden = true;
+        }
+      }, 150);
+    });
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        box.hidden = true;
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!input.contains(event.target) && !box.contains(event.target)) {
+        box.hidden = true;
+      }
+    });
+  })();
+</script>
 {% endblock %}
