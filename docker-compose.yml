@@ -9,7 +9,7 @@ services:
       NASA_API_KEY: ${NASA_API_KEY:-DEMO_KEY}
       LOCATIONS_FILE: /app/data/locations/locations.json
       ASTRONOMY_MEDIA_DIR: /app/static/media/astronomy
-    command: sh -c "python -c 'from astronomy import create_app; create_app()' && gunicorn --bind 0.0.0.0:5003 --workers 2 app:app"
+    command: sh -c "python -c 'from astronomy import create_app; create_app()' && gunicorn --bind 0.0.0.0:5003 --workers 1 --worker-class gthread --threads 4 --timeout 60 app:app"
     ports:
       - "${APP_PORT:-5003}:5003"
     volumes: [astronomy_media:/app/static/media/astronomy]
