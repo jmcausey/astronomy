@@ -126,12 +126,14 @@ def location_search():
     query = request.args.get("q", "").strip().lower()
     if len(query) < 2:
         return jsonify({"locations": []})
+
     matches = []
     for item in location_options():
         name = item["name"].lower()
         if query in name:
-            score = 0 if name.startswith(query) else 2
+            score = 0 if name.startswith(query) else (1 if f", {query}" in name else 2)
             matches.append((score, len(name), item))
+
     matches.sort(key=lambda item: (item[0], item[1], item[2]["name"].lower()))
     return jsonify({"locations": [item for _, _, item in matches[:12]]})
 
