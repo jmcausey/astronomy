@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Astronomy Control Panel{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Astronomy Control Panel</h1>
+    <div class="meta">Schedule astronomy data collection by location.</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Add / Edit Job</h2>
+  <form method="post">
+    <input type="hidden" name="action" value="save">
+    <div class="form-grid">
+      <label>
+        Job name
+        <input name="name" placeholder="Dallas daily" required>
+      </label>
+      <label>
+        Location
+        <input name="location" list="locations" placeholder="Dallas, TX" required>
+      </label>
+      <label>
+        Latitude
+        <input name="latitude" type="number" step="any" min="-90" max="90" required>
+      </label>
+      <label>
+        Longitude
+        <input name="longitude" type="number" step="any" min="-180" max="180" required>
+      </label>
+      <label>
+        Interval
+        <select name="interval_minutes">
+          <option value="15">Every 15 minutes</option>
+          <option value="60" selected>Hourly</option>
+          <option value="240">Every 4 hours</option>
+          <option value="1440">Daily</option>
+        </select>
+      </label>
+      <label>
+        <span>Enabled</span>
+        <span><input type="checkbox" name="enabled" value="1" checked> Run automatically</span>
+      </label>
+      <div class="full">
+        <button type="submit">Save Job</button>
+      </div>
+    </div>
+  </form>
+  <datalist id="locations">
+    {% for location in locations %}
+      <option value="{{ location.name }}" data-latitude="{{ location.latitude }}" data-longitude="{{ location.longitude }}">
+    {% endfor %}
+  </datalist>
+</div>
+
+<div class="card">
+  <h2>Scheduled Jobs</h2>
+  {% if jobs %}
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Interval</th>
+            <th>Status</th>
+            <th>Last Run</th>
+            <th>Last Error</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for job in jobs %}
+          <tr>
+            <td>{{ job.name }}</td>
+            <td>{{ job.location }}<br><span class="meta">{{ "%.4f"|format(job.latitude) }}, {{ "%.4f"|format(job.longitude) }}</span></td>
+            <td>
+              {% if job.interval_minutes == 15 %}15 minutes
+              {% elif job.interval_minutes == 60 %}Hourly
+              {% elif job.interval_minutes == 240 %}Every 4 hours
+              {% else %}Daily{% endif %}
+            </td>
+            <td>
+              {% if job.enabled %}
+                <span class="job-enabled">Enabled</span>
+              {% else %}
+                <span class="job-disabled">Disabled</span>
+              {% endif %}
+              {% if job.last_status %}<br>{{ job.last_status }}{% endif %}
+            </td>
+            <td>{{ job.last_run_at or "Never run" }}</td>
+            <td>{{ job.last_error or "" }}</td>
+            <td>
+              <div class="job-actions">
+                <form method="post"><input type="hidden" name="action" value="run"><input type="hidden" name="job_id" value="{{ job.id }}"><button type="submit">Run Now</button></form>
+                <form method="post"><input type="hidden" name="action" value="toggle"><input type="hidden" name="job_id" value="{{ job.id }}"><button class="button-muted" type="submit">{% if job.enabled %}Disable{% else %}Enable{% endif %}</button></form>
+                <form method="post" onsubmit="return confirm('Delete this astronomy job?');"><input type="hidden" name="action" value="delete"><input type="hidden" name="job_id" value="{{ job.id }}"><button class="button-danger" type="submit">Delete</button></form>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="empty-state">No astronomy jobs configured.</p>
+  {% endif %}
+</div>
+{% endblock %}
