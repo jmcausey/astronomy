@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Historical Astronomy Data{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><h1>Historical Astronomy Data</h1><span class="location-label">Collected observations</span></div>
+</div>
+<form method="get" class="location-form">
+  <label for="location">Location</label>
+  <select id="location" name="location">
+    <option value="">All locations</option>
+    {% for location in locations %}<option value="{{ location }}" {% if selected==location %}selected{% endif %}>{{ location }}</option>{% endfor %}
+  </select>
+  <button type="submit">Filter</button>
+</form>
+{% if records %}
+<div class="table-responsive"><table>
+<thead><tr><th>Time</th><th>Location</th><th>City</th><th>Country</th><th>Coordinates</th><th>Sunrise</th><th>Sunset</th><th>Day Length</th><th>Solar Noon</th><th>Moon Phase</th><th>Moonrise</th><th>Moonset</th><th>Moon Illumination</th></tr></thead>
+<tbody>{% for row in records %}<tr>
+<td>{{ row.timestamp }}</td><td>{{ row.location or "-" }}</td><td>{{ row.city or "-" }}</td><td>{{ row.country_name or "-" }}</td>
+<td>{% if row.latitude is not none and row.longitude is not none %}{{ "%.2f"|format(row.latitude) }}, {{ "%.2f"|format(row.longitude) }}{% else %}-{% endif %}</td>
+<td>{{ row.sunrise or "-" }}</td><td>{{ row.sunset or "-" }}</td><td>{{ row.day_length or "-" }}</td><td>{{ row.solar_noon or "-" }}</td>
+<td>{{ row.moon_phase or "-" }}</td><td>{{ row.moonrise or "-" }}</td><td>{{ row.moonset or "-" }}</td><td>{{ row.moon_illumination_percentage if row.moon_illumination_percentage is not none else "-" }}%</td>
+</tr>{% endfor %}</tbody></table></div>
+{% else %}<p class="empty-state">No historical astronomy data available.</p>{% endif %}
+{% endblock %}
