@@ -24,6 +24,14 @@
     a{color:#3182ce}
     .card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:1rem;margin:.75rem 0}
     .meta{color:#666;font-size:.9rem}
+    .astronomy-current{max-width:1200px;margin:0 auto}
+    .astronomy-updated{color:#718096;font-size:.85rem}
+    .sky-hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#172554,#312e81 55%,#0f172a);color:#fff;border-radius:16px;padding:2rem;margin:1rem 0 1.25rem;min-height:210px;display:flex;align-items:center;justify-content:space-between}
+    .sky-copy{position:relative;z-index:2;max-width:620px}.sky-copy .eyebrow,.card-label{font-size:.72rem;letter-spacing:.12em;font-weight:800;color:#93c5fd}.sky-copy h2{font-size:2.1rem;margin:.35rem 0}.sky-copy p{color:#cbd5e1;margin:0}
+    .sun-orbit{width:250px;height:150px;position:relative;margin-right:2rem}.orbit-line{position:absolute;width:230px;height:110px;border:1px solid rgba(255,255,255,.25);border-radius:50%;top:20px;left:5px;transform:rotate(-15deg)}.sun-dot,.moon-dot{position:absolute;border-radius:50%;display:grid;place-items:center}.sun-dot{width:54px;height:54px;right:15px;top:5px;background:#fbbf24;color:#78350f;font-size:1.7rem;box-shadow:0 0 35px rgba(251,191,36,.45)}.moon-dot{width:38px;height:38px;left:15px;bottom:8px;background:#e2e8f0;color:#334155;font-size:1.5rem}
+    .astronomy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.astro-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:1.2rem;box-shadow:0 3px 14px rgba(15,23,42,.05)}.card-label{color:#64748b;margin-bottom:.8rem}.metric-pair{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.metric-pair div{display:grid;grid-template-columns:auto 1fr;column-gap:.45rem}.metric-pair strong{font-size:1.55rem}.metric-pair small,.moon-row small,.astro-card>small{grid-column:2;color:#718096}.metric-icon{grid-row:span 2;font-size:1.25rem;color:#2563eb}.card-footer{border-top:1px solid #edf2f7;margin-top:1rem;padding-top:.75rem;color:#64748b;font-size:.9rem}.moon-row{display:flex;align-items:center;gap:1rem}.moon-row strong,.moon-row small{display:block}.moon-visual{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0 55%,#cbd5e1 56% 100%);box-shadow:inset -12px 0 0 rgba(15,23,42,.14),0 3px 12px rgba(15,23,42,.12)}.big-number{font-size:2.4rem;font-weight:800;margin:.1rem 0}.big-number span{font-size:1.2rem;color:#64748b}.detail-row{display:flex;justify-content:space-between;border-top:1px solid #edf2f7;margin-top:.8rem;padding-top:.65rem;color:#64748b}.detail-row strong{color:#1a202c}.astro-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#cbd5e1;border:1px solid #cbd5e1;border-radius:14px;overflow:hidden;margin-top:1rem}.astro-strip div{background:#fff;padding:1rem;display:grid;grid-template-columns:auto 1fr;column-gap:.65rem}.astro-strip span{grid-row:span 2;font-size:1.3rem;color:#2563eb}.astro-strip b{font-size:.95rem}.astro-strip small{color:#718096}
+    @media(max-width:800px){.sky-hero{min-height:0;padding:1.35rem}.sun-orbit{display:none}.astronomy-grid{grid-template-columns:1fr}.astro-strip{grid-template-columns:repeat(2,1fr)}}
+
     .notice{padding:.75rem;background:#fff;border:1px solid #ddd;border-radius:6px;margin:.5rem 0}
     .page-heading{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:1rem}
     .page-heading h1{margin:0}
@@ -70,7 +78,7 @@
       <ul class="nav-sub-right">
         <li><a href="{{ url_for('astronomy.astronomy_table') }}">Current Astronomy</a></li>
         <li><a href="{{ url_for('astronomy.apod_page') }}">APOD</a></li>
-        <li><a href="{{ url_for('astronomy.astronomy_table') }}">Historical Data</a></li>
+        <li><a href="{{ url_for('astronomy.astronomy_historical') }}">Historical Data</a></li>
         <li><a href="{{ url_for('astronomy.control') }}">Control Panel</a></li>
       </ul>
     </div>
