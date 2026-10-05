@@ -38,6 +38,15 @@
     th{background:#edf2f7;font-weight:700}
     tbody tr:hover{background:#f7fafc}
     .empty-state{padding:1rem;background:#fff;border:1px solid #e2e8f0;border-radius:8px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+    .form-grid label{display:flex;flex-direction:column;gap:.3rem;font-weight:600}
+    .full{grid-column:1/-1}
+    .job-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+    .job-actions form{margin:0}
+    .button-danger{background:#fff;border:1px solid #c53030;color:#c53030}
+    .button-muted{background:#edf2f7;border:1px solid #cbd5e0}
+    .job-enabled{color:#276749;font-weight:700}
+    .job-disabled{color:#718096;font-weight:700}
     @media(max-width:800px){
       .nav-bottom-row{flex-direction:column;align-items:flex-start;gap:.5rem}
       .weather-metrics{flex-wrap:wrap;gap:.4rem}
@@ -45,6 +54,8 @@
       .content{padding:.9rem}
       .page-heading{align-items:flex-start;flex-direction:column}
       .location-form{align-items:stretch;flex-direction:column}
+      .form-grid{grid-template-columns:1fr}
+      .full{grid-column:auto}
     }
   </style>
 </head>
@@ -60,6 +71,7 @@
         <li><a href="{{ url_for('astronomy.astronomy_table') }}">Current Astronomy</a></li>
         <li><a href="{{ url_for('astronomy.apod') }}">APOD</a></li>
         <li><a href="{{ url_for('astronomy.astronomy_table') }}">Historical Data</a></li>
+        <li><a href="{{ url_for('astronomy.control') }}">Control Panel</a></li>
       </ul>
     </div>
     <div class="nav-bottom-row">
