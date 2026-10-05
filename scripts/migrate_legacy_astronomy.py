@@ -9,7 +9,7 @@ import psycopg
 
 
 COLUMNS = [
-    "timestamp", "location", "country_name", "state_prov", "city", "locality",
+    "id", "timestamp", "location", "country_name", "state_prov", "city", "locality",
     "latitude", "longitude", "elevation", "mid_night", "night_end",
     "morn_astronomical_twilight_begin", "morn_astronomical_twilight_end",
     "morn_nautical_twilight_begin", "morn_nautical_twilight_end",
