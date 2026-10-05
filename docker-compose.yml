@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cl}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-cl}
+      CURRENT_LOCATION: ${CURRENT_LOCATION:-Athens, TX}
+      IPGEOLOCATION_API_KEY: ${IPGEOLOCATION_API_KEY:-}
+      NASA_API_KEY: ${NASA_API_KEY:-DEMO_KEY}
+      LOCATIONS_FILE: /app/data/locations/locations.json
+      ASTRONOMY_MEDIA_DIR: /app/static/media/astronomy
+    command: sh -c "python -c 'from astronomy import create_app; create_app()' && gunicorn --bind 0.0.0.0:5003 --workers 2 app:app"
+    ports:
+      - "${APP_PORT:-5003}:5003"
+    volumes: [astronomy_media:/app/static/media/astronomy]
+    networks: [cl_shared_data]
+  scheduler:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-cl}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-cl}
+      CURRENT_LOCATION: ${CURRENT_LOCATION:-Athens, TX}
+      IPGEOLOCATION_API_KEY: ${IPGEOLOCATION_API_KEY:-}
+      LOCATIONS_FILE: /app/data/locations/locations.json
+      ASTRONOMY_INTERVAL_SECONDS: ${ASTRONOMY_INTERVAL_SECONDS:-3600}
+    command: python scheduler.py
+    networks: [cl_shared_data]
+volumes: {astronomy_media: {}}
+networks: {cl_shared_data: {external: true, name: cl_shared_data}}
