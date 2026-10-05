@@ -23,7 +23,24 @@ def location_options():
 
 @bp.route("/")
 @bp.route("/astronomy")
-def astronomy_table():
+def astronomy_current():
+    current_location = current_app.config.get("CURRENT_LOCATION", "").strip()
+    row = get_db().execute(
+        """SELECT * FROM astronomy
+           WHERE location = %s
+           ORDER BY timestamp DESC
+           LIMIT 1""",
+        (current_location,),
+    ).fetchone()
+    return render_template(
+        "astronomy.html",
+        record=row,
+        current_location=current_location,
+    )
+
+
+@bp.route("/historical")
+def astronomy_historical():
     selected = request.args.get("location", "").strip()
     query = "SELECT * FROM astronomy"
     params = ()
@@ -36,7 +53,7 @@ def astronomy_table():
         "SELECT DISTINCT location FROM astronomy WHERE location IS NOT NULL ORDER BY location"
     ).fetchall()
     return render_template(
-        "astronomy.html",
+        "historical.html",
         records=rows,
         locations=[row["location"] for row in locs],
         selected=selected,
