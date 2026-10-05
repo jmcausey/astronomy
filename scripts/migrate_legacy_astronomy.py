@@ -46,6 +46,7 @@ def migrate(sqlite_path: str, database_url: str) -> int:
     with psycopg.connect(database_url) as pg:
         with pg.cursor() as cur:
             cur.executemany(sql, [tuple(row[c] for c in COLUMNS) for row in rows])
+            cur.execute("SELECT setval(pg_get_serial_sequence('astronomy', 'id'), COALESCE((SELECT MAX(id) FROM astronomy), 1), true)")
 
     return len(rows)
 
