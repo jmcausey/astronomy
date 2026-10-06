@@ -26,8 +26,8 @@
       <section class="astro-card sunrise-card">
         <div class="card-label">SUN</div>
         <div class="metric-pair">
-          <div><span class="metric-icon">↑</span><strong>{{ record.sunrise or "—" }}</strong><small>Sunrise</small></div>
-          <div><span class="metric-icon">↓</span><strong>{{ record.sunset or "—" }}</strong><small>Sunset</small></div>
+          <div><span class="metric-icon">↑</span><strong>{{ record.sunrise|time12 }}</strong><small>Sunrise</small></div>
+          <div><span class="metric-icon">↓</span><strong>{{ record.sunset|time12 }}</strong><small>Sunset</small></div>
         </div>
         <div class="card-footer">Day length <strong>{{ record.day_length or "—" }}</strong></div>
       </section>
@@ -41,7 +41,7 @@
             <small>{{ record.moon_illumination_percentage if record.moon_illumination_percentage is not none else "—" }}% illuminated</small>
           </div>
         </div>
-        <div class="card-footer">Moonrise <strong>{{ record.moonrise or "—" }}</strong> · Moonset <strong>{{ record.moonset or "—" }}</strong></div>
+        <div class="card-footer">Moonrise <strong>{{ record.moonrise|time12 }}</strong> · Moonset <strong>{{ record.moonset|time12 }}</strong></div>
       </section>
 
       <section class="astro-card">
@@ -49,7 +49,7 @@
         <div class="big-number">{{ record.sun_altitude if record.sun_altitude is not none else "—" }}<span>°</span></div>
         <small>Altitude</small>
         <div class="detail-row"><span>Azimuth</span><strong>{{ record.sun_azimuth if record.sun_azimuth is not none else "—" }}°</strong></div>
-        <div class="detail-row"><span>Solar noon</span><strong>{{ record.solar_noon or "—" }}</strong></div>
+        <div class="detail-row"><span>Solar noon</span><strong>{{ record.solar_noon|time12 }}</strong></div>
       </section>
 
       <section class="astro-card">

@@ -78,6 +78,12 @@ def fetch_astronomy_data(location_query):
         return {}
     return fetch_astronomy_at_coordinates(lat, lon, location_query)
 
+def celestial_status(altitude):
+    """Return whether a celestial body is above or below the horizon."""
+    try:
+        return "Above horizon" if float(altitude) >= 0 else "Below horizon"
+    except (TypeError, ValueError):
+        return "-"
 
 def process_and_insert_astronomy_data(api_data=None):
     if api_data is None:
@@ -107,6 +113,8 @@ def process_and_insert_astronomy_data(api_data=None):
             value = api_data.get(key)
             payload[key] = None if isinstance(value, (dict, list)) else value
 
+    payload["sun_status"] = celestial_status(payload.get("sun_altitude"))
+    payload["moon_status"] = celestial_status(payload.get("moon_altitude"))
     columns = ", ".join(payload)
     values = ", ".join(f"%({key})s" for key in payload)
     db = get_db()

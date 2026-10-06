@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
-
+from datetime import datetime
 from flask import Flask
-
 from .db import init_app as init_db_app
 from .routes import bp
 
@@ -14,6 +13,15 @@ def create_app(test_config=None):
         template_folder="../templates",
         static_folder="../static",
     )
+    @app.template_filter("time12")
+    def time12(value):
+        if not value:
+            return "—"
+        try:
+            return datetime.strptime(str(value), "%H:%M").strftime("%-I:%M %p")
+        except (ValueError, TypeError):
+            return value
+
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
     app.config.from_mapping(
         SECRET_KEY=os.environ.get("FLASK_SECRET_KEY", "astronomy-local"),
